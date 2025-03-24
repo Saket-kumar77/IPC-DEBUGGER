@@ -118,6 +118,10 @@ def run_debugger(output_widget):
     monitor_shared_memory(output_widget)
     monitor_semaphore(output_widget)
     monitor_sockets(output_widget)
+# Add this function around line 120
+def clear_output(output_widget):
+    """Clears the output log."""
+    output_widget.delete(1.0, tk.END)
 
     update_output(output_widget, "\nIPC Monitoring Completed!\n")
 
@@ -128,6 +132,19 @@ def setup_gui():
     app = tk.Tk()
     app.title("IPC Debugger (Windows Compatible)")
     app.geometry("800x500")
+    # Output log area
+    output_text = scrolledtext.ScrolledText(app, wrap=tk.WORD, width=100, height=20, font=("Courier", 10))
+    output_text.pack(pady=10)
+
+    # ✅ Add the "Clear Log" button here (around line 135)
+    clear_btn = tk.Button(app, text="Clear Log", command=lambda: clear_output(output_text), bg="red", fg="white",
+                          font=("Helvetica", 12))
+    clear_btn.pack(pady=5)
+
+    # "Run Debugger" button
+    btn = tk.Button(app, text="Run Debugger", command=lambda: run_debugger(output_text), bg="green", fg="white",
+                    font=("Helvetica", 12))
+    btn.pack(pady=5)
 
     tk.Label(app, text="Inter-Process Communication (IPC) Debugger", font=("Helvetica", 16, "bold")).pack(pady=10)
 
@@ -141,7 +158,6 @@ def setup_gui():
     app.mainloop()
 
 from datetime import datetime
-
 def update_output(output_widget, message):
     """Updates the GUI output area with timestamps."""
     timestamp = datetime.now().strftime("[%H:%M:%S] ")
